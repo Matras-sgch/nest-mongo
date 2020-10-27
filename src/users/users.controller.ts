@@ -1,13 +1,25 @@
-import { Controller, Post, Body } from '@nestjs/common';
-import { User, SignupRsp } from './interfaces/user';
+import { Controller, Post, Body, Get, Request, UseGuards } from '@nestjs/common';
+import { User, SignupRsp, LoginRsp } from './interfaces/user';
 import { UsersService } from './users.service';
 import { CreateUserDTO } from './dto/create-user.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('users')
 export class UsersController {
   constructor(private userService: UsersService) {}
   @Post('signup')
   async signUp(@Body() user: CreateUserDTO): Promise<SignupRsp> {
-    return await this.userService.signup(user);
+    return await this.userService.signUp(user);
+  }
+
+  @Post('login')
+  async logIn(@Body() user: CreateUserDTO): Promise<LoginRsp> {
+    return await this.userService.logIn(user)
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get('profile')
+  async profile(@Request() req) {
+    return req.user
   }
 }
