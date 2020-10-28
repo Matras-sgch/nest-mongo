@@ -3,6 +3,7 @@ import { User, SignupRsp, LoginRsp } from './interfaces/user';
 import { UsersService } from './users.service';
 import { CreateUserDTO } from './dto/create-user.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('users')
 export class UsersController {
@@ -18,6 +19,7 @@ export class UsersController {
   }
 
   @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth()
   @Get('profile')
   async profile(@Request() req) {
     return req.user
